@@ -41,7 +41,7 @@ public func presentTranslateScreen(
     }
 }
 
-#if canImport(Translation)
+#if canImport(AlarmKit)
 private func presentSystemTranslateScreen(context: AccountContext, text: String) {
     if #available(iOS 18.0, *), let rootViewController = context.sharedContext.mainWindow?.viewController?.view.window?.rootViewController {
         var dismissImpl: (() -> Void)?

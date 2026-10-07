@@ -6,7 +6,7 @@ import AccountContext
 import NaturalLanguage
 import TelegramCore
 import SwiftUI
-#if canImport(Translation)
+#if canImport(AlarmKit)
 import Translation
 #endif
 import Combine
@@ -257,7 +257,7 @@ class ExternalTranslationTrigger: ObservableObject {
     @Published var shouldInvalidate: Int = 0
 }
 
-#if canImport(Translation)
+#if canImport(AlarmKit)
 @available(iOS 18.0, *)
 private struct TranslationViewImpl: View {
     @State private var configuration: TranslationSession.Configuration?
