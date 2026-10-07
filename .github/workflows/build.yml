@@ -36,6 +36,14 @@ jobs:
           cp -R "$GITHUB_WORKSPACE" /Users/Shared/
           mv /Users/Shared/$(basename "$GITHUB_WORKSPACE") /Users/Shared/telegram-ios
 
+      - name: Cache Bazel artifacts
+        uses: actions/cache@v4
+        with:
+          path: /Users/Shared/telegram-bazel-cache
+          key: bazel-cache-${{ runner.os }}-${{ hashFiles('versions.json', 'MODULE.bazel') }}
+          restore-keys: |
+            bazel-cache-${{ runner.os }}-
+
       - name: Build the App
         run: |
           set -x
@@ -58,6 +66,7 @@ jobs:
           python3 -u build-system/Make/Make.py \
             --overrideXcodeVersion \
             --overrideBazelVersion \
+            --cacheDir=/Users/Shared/telegram-bazel-cache \
             --bazelUserRoot="$BAZEL_USER_ROOT" \
             build \
             --configurationPath="build-system/appstore-configuration.json" \

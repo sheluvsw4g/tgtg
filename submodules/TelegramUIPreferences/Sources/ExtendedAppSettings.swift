@@ -255,7 +255,7 @@ public extension ExtendedAppSettings {
             return currentExtendedSettingsAtomic.with { $0 }
         }
         set {
-            currentExtendedSettingsAtomic.with { $0 = newValue }
+            let _ = currentExtendedSettingsAtomic.swap(newValue)
         }
     }
 }
