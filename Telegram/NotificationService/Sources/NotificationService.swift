@@ -591,6 +591,7 @@ private struct NotificationContent: CustomStringConvertible {
             content.subtitle = subtitle
         }
         if let body = self.body {
+            #if canImport(AlarmKit)
             if #available(iOS 18.0, *) {
                 if !self.resolvedEmojiFiles.isEmpty {
                     let attributedString = NSMutableAttributedString(string: body)
@@ -631,6 +632,9 @@ private struct NotificationContent: CustomStringConvertible {
             } else {
                 content.body = body
             }
+            #else
+            content.body = body
+            #endif
         }
         
         if !content.title.isEmpty || !content.subtitle.isEmpty || !content.body.isEmpty {
@@ -2608,6 +2612,7 @@ final class NotificationService: UNNotificationServiceExtension {
     }
 }
 
+#if canImport(AlarmKit)
 typealias CMJImage = UIImage
 
 // MARK: - Public Namespace
@@ -3034,3 +3039,4 @@ extension Customoji {
         return sizes
     }
 }
+#endif
