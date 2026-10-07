@@ -6,7 +6,9 @@ import AccountContext
 import NaturalLanguage
 import TelegramCore
 import SwiftUI
+#if canImport(Translation)
 import Translation
+#endif
 import Combine
 
 // Incuding at least one Objective-C class in a swift file ensures that it doesn't get stripped by the linker
@@ -255,6 +257,7 @@ class ExternalTranslationTrigger: ObservableObject {
     @Published var shouldInvalidate: Int = 0
 }
 
+#if canImport(Translation)
 @available(iOS 18.0, *)
 private struct TranslationViewImpl: View {
     @State private var configuration: TranslationSession.Configuration?
@@ -436,6 +439,16 @@ public final class ExperimentalInternalTranslationServiceImpl: ExperimentalInter
         }
     }
 }
+#else
+public final class ExperimentalInternalTranslationServiceImpl: ExperimentalInternalTranslationService {
+    public init(view: UIView) {
+    }
+    
+    public func translate(texts: [AnyHashable: String], fromLang: String, toLang: String) -> Signal<[AnyHashable: String]?, NoError> {
+        return .single(nil)
+    }
+}
+#endif
 
 func alternativeTranslateText(text: String, fromLang: String?, toLang: String) -> Signal<(String, [MessageTextEntity])?, TelegramCore.TranslationError> {
     return Signal { subscriber in

@@ -41,6 +41,7 @@ public func presentTranslateScreen(
     }
 }
 
+#if canImport(Translation)
 private func presentSystemTranslateScreen(context: AccountContext, text: String) {
     if #available(iOS 18.0, *), let rootViewController = context.sharedContext.mainWindow?.viewController?.view.window?.rootViewController {
         var dismissImpl: (() -> Void)?
@@ -86,3 +87,7 @@ struct TranslateScreenHostingView: View {
             }
     }
 }
+#else
+private func presentSystemTranslateScreen(context: AccountContext, text: String) {
+}
+#endif

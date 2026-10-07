@@ -1109,9 +1109,11 @@ public final class ChatInputTextView: ChatInputTextViewImpl, UITextViewDelegate,
         self.delegate = self
         self.scrollsToTop = false
         
+        #if canImport(AlarmKit)
         if #available(iOS 18.0, *) {
             self.supportsAdaptiveImageGlyph = false
         }
+        #endif
         
         self.displayInternal.updateDisplayElements = { [weak self] in
             self?.updateTextElements()
