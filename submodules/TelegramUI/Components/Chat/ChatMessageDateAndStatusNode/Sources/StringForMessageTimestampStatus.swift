@@ -248,5 +248,9 @@ public func stringForMessageTimestampStatus(
         }
     }
     
+    if AntiDeleteManager.isDeleted(id: message.id) {
+        dateText = "🗑️ " + dateText
+    }
+    
     return dateText
 }

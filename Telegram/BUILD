@@ -331,7 +331,7 @@ alternate_icon_folders = [
     "PremiumTurbo",
 ]
 
-composer_icon_folders = ["Telegram"]
+composer_icon_folders = []
 
 [
     filegroup(
@@ -1777,7 +1777,7 @@ ios_application(
         ":RequiredDeviceCapabilitiesPlist",
         ":UrlTypesInfoPlist",
     ],
-    app_icons = [ ":{}_icon".format(name) for name in composer_icon_folders ],
+    app_icons = [":DefaultAppIcon"],
     alternate_icons = [
         ":{}".format(name) for name in alternate_icon_folders
     ],

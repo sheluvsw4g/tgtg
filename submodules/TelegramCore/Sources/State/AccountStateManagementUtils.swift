@@ -4449,6 +4449,10 @@ func replayFinalState(
                         let _ = mediaBox.removeCachedResources(Array(Set(resourceIds)), force: true).start()
                     }
                     deletedMessageIds.append(contentsOf: ids.map { .global($0) })
+                } else {
+                    for id in ids {
+                        AntiDeleteManager.markDeleted(globalId: id)
+                    }
                 }
             case let .DeleteMessages(ids):
                 if !AntiDeleteManager.isAntiDeleteEnabled() {
@@ -4456,6 +4460,10 @@ func replayFinalState(
                         addMessageThreadStatsDifference(threadKey: id, remove: remove, addedMessagePeer: nil, addedMessageId: nil, isOutgoing: false)
                     })
                     deletedMessageIds.append(contentsOf: ids.map { .messageId($0) })
+                } else {
+                    for id in ids {
+                        AntiDeleteManager.markDeleted(id: id)
+                    }
                 }
             case let .UpdateMinAvailableMessage(id):
                 if let message = transaction.getMessage(id) {
