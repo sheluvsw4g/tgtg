@@ -189,6 +189,7 @@ class BuildEnvironment:
                 print('Overriding the required bazel version {} with {} as reported by {}'.format(
                     versions.bazel_version, actual_bazel_version, self.bazel_path))
                 self.bazel_version = actual_bazel_version
+                versions.bazel_version = actual_bazel_version
             else:
                 print('Required bazel version is "{}", but "{}"" is reported by {}'.format(
                     versions.bazel_version, actual_bazel_version, self.bazel_path))
