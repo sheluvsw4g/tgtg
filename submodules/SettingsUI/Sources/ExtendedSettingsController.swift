@@ -500,9 +500,27 @@ public func makeExtendedSettingsController(context: AccountContext) -> ViewContr
             updateStateImpl?()
         },
         openFakeGifts: {
-            let alert = UIAlertController(title: "Фейковые подарки", message: "Каталог расширенных подарков активен. Подарки доступны при выборе в диалогах.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Понятно", style: .default))
-            context.sharedContext.mainWindow?.topViewController?.present(alert, animated: true)
+            let sheet = UIAlertController(title: "Выдать себе NFT подарок", message: "Выберите коллекционный подарок для добавления на витрину профиля:", preferredStyle: .actionSheet)
+            sheet.addAction(UIAlertAction(title: "🐸 Plush Pepe (#1337)", style: .default, handler: { _ in
+                FakeGiftsManager.shared.addGift(title: "Plush Pepe", num: 1337, recipientPeerId: 0)
+                let confirm = UIAlertController(title: "Успешно!", message: "Plush Pepe #1337 добавлен в ваш профиль.", preferredStyle: .alert)
+                confirm.addAction(UIAlertAction(title: "Отлично", style: .default))
+                context.sharedContext.mainWindow?.topViewController?.present(confirm, animated: true)
+            }))
+            sheet.addAction(UIAlertAction(title: "🧢 Durov's Cap (#777)", style: .default, handler: { _ in
+                FakeGiftsManager.shared.addGift(title: "Durov's Cap", num: 777, recipientPeerId: 0)
+                let confirm = UIAlertController(title: "Успешно!", message: "Durov's Cap #777 добавлен в ваш профиль.", preferredStyle: .alert)
+                confirm.addAction(UIAlertAction(title: "Отлично", style: .default))
+                context.sharedContext.mainWindow?.topViewController?.present(confirm, animated: true)
+            }))
+            sheet.addAction(UIAlertAction(title: "💎 Heart of Gold (#1)", style: .default, handler: { _ in
+                FakeGiftsManager.shared.addGift(title: "Heart of Gold", num: 1, recipientPeerId: 0)
+                let confirm = UIAlertController(title: "Успешно!", message: "Heart of Gold #1 добавлен в ваш профиль.", preferredStyle: .alert)
+                confirm.addAction(UIAlertAction(title: "Отлично", style: .default))
+                context.sharedContext.mainWindow?.topViewController?.present(confirm, animated: true)
+            }))
+            sheet.addAction(UIAlertAction(title: "Отмена", style: .cancel))
+            context.sharedContext.mainWindow?.topViewController?.present(sheet, animated: true)
         },
         restartApp: {
             exit(0)

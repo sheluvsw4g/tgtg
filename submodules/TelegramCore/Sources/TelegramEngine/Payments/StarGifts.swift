@@ -1493,6 +1493,7 @@ func _internal_buyStarGift(account: Account, slug: String, peerId: EnginePeer.Id
     if StarsMockManager.shared.mockNftPurchasesEnabled {
         let starsCost = price?.amount.value ?? 100
         StarsMockManager.shared.spendFakeStars(amount: starsCost)
+        FakeGiftsManager.shared.addGift(title: "Collectible NFT", num: Int32.random(in: 1...9999), recipientPeerId: peerId.toInt64())
         return .complete()
     }
     let source: BotPaymentInvoiceSource = .starGiftResale(slug: slug, toPeerId: peerId, ton: price?.currency == .ton)
@@ -1596,6 +1597,7 @@ func _internal_dropStarGiftOriginalDetails(account: Account, reference: StarGift
 func _internal_transferStarGift(account: Account, prepaid: Bool, reference: StarGiftReference, peerId: EnginePeer.Id) -> Signal<Never, TransferStarGiftError> {
     if StarsMockManager.shared.mockNftPurchasesEnabled {
         StarsMockManager.shared.spendFakeStars(amount: 50)
+        FakeGiftsManager.shared.addGift(title: "Collectible NFT", num: Int32.random(in: 1...9999), recipientPeerId: peerId.toInt64())
         return .complete()
     }
     return account.postbox.transaction { transaction -> (Api.InputPeer, Api.InputSavedStarGift)? in
