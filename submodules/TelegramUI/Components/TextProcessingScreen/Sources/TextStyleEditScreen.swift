@@ -251,7 +251,7 @@ final class TextStyleEditContentComponent: Component {
                         self.activateEmojiSelection()
                     },
                     animateAlpha: false,
-                    animateScale: false,
+                    animateScale: false
                 )),
                 environment: {},
                 containerSize: iconBackgroundSize

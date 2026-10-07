@@ -1977,7 +1977,7 @@ private final class TextProcessingSheetComponent: Component {
                         )),
                         content: AnyComponent(VStack([
                             AnyComponentWithIdentity(id: 0, component: AnyComponent(MultilineTextComponent(
-                                text: .plain(NSAttributedString(string: environmentValue.strings.TextProcessing_LimitToast_Title, font: Font.semibold(14.0), textColor: .white)),
+                                text: .plain(NSAttributedString(string: environmentValue.strings.TextProcessing_LimitToast_Title, font: Font.semibold(14.0), textColor: .white))
                             ))),
                             AnyComponentWithIdentity(id: 1, component: AnyComponent(MultilineTextComponent(
                                 text: .markdown(text: environmentValue.strings.TextProcessing_LimitToast_Text, attributes: MarkdownAttributes(body: body, bold: bold, link: body, linkAttribute: { _ in nil })),
@@ -2048,7 +2048,7 @@ private final class TextProcessingSheetComponent: Component {
                         )),
                         content: AnyComponent(VStack([
                             AnyComponentWithIdentity(id: 0, component: AnyComponent(MultilineTextComponent(
-                                text: .plain(NSAttributedString(string: environmentValue.strings.TextProcessing_ToastStyleCreated_Title(styleCreatedToastData.style.title).string, font: Font.semibold(14.0), textColor: .white)),
+                                text: .plain(NSAttributedString(string: environmentValue.strings.TextProcessing_ToastStyleCreated_Title(styleCreatedToastData.style.title).string, font: Font.semibold(14.0), textColor: .white))
                             ))),
                             AnyComponentWithIdentity(id: 1, component: AnyComponent(MultilineTextComponent(
                                 text: .markdown(text: environmentValue.strings.TextProcessing_ToastStyleCreated_Text, attributes: MarkdownAttributes(body: body, bold: bold, link: body, linkAttribute: { _ in nil })),

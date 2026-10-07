@@ -173,7 +173,7 @@ private final class TableStructuralMenuAlignmentItemNode: ASDisplayNode, Context
                         component: AnyComponent(PlainButtonComponent(
                             content: AnyComponent(BundleIconComponent(
                                 name: itemKind.icon,
-                                tintColor: self.presentationData.theme.contextMenu.primaryColor,
+                                tintColor: self.presentationData.theme.contextMenu.primaryColor
                             )),
                             minSize: itemSize,
                             action: { [weak self] in

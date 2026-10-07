@@ -751,7 +751,7 @@ private final class PendingInAppPurchaseState: Codable {
                     restore: try container.decode(Bool.self, forKey: .restore),
                     phoneNumber: try container.decode(String.self, forKey: .phoneNumber),
                     phoneCodeHash: try container.decode(String.self, forKey: .phoneCodeHash),
-                    premiumDays: try container.decode(Int32.self, forKey: .premiumDays),
+                    premiumDays: try container.decode(Int32.self, forKey: .premiumDays)
                 )
             default:
                 throw DecodingError.generic

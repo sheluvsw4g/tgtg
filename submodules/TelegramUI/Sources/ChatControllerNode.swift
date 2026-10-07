@@ -1636,7 +1636,7 @@ class ChatControllerNode: ASDisplayNode, ASScrollViewDelegate {
                             return
                         }
                         self.controllerInteraction.openMessageFeeException()
-                    },
+                    }
                 )))
             )
         }
