@@ -160,8 +160,10 @@ public final class DeviceAccess {
                             subscriber.putNext(.notDetermined)
                         case .authorized:
                             subscriber.putNext(.allowed)
+                        #if canImport(AlarmKit)
                         case .limited:
                             subscriber.putNext(.limited)
+                        #endif
                         default:
                             subscriber.putNext(.denied)
                     }
@@ -533,9 +535,11 @@ public final class DeviceAccess {
                                 case .authorized:
                                     self.contactsPromise.set(.single(true))
                                     completion(true)
+                                #if canImport(AlarmKit)
                                 case .limited:
                                     self.contactsPromise.set(.single(true))
                                     completion(true)
+                                #endif
                                 default:
                                     self.contactsPromise.set(.single(false))
                                     completion(false)
