@@ -28,7 +28,7 @@ import ComponentDisplayAdapters
 extension AudioWaveformNode: CustomMediaPlayerScrubbingForegroundNode {
 }
 #else
-extension AudioWaveformNode: @retroactive CustomMediaPlayerScrubbingForegroundNode {
+extension AudioWaveformNode: CustomMediaPlayerScrubbingForegroundNode {
 }
 #endif
 

@@ -837,7 +837,7 @@ extension SolidRoundedButtonView: TGPhotoSolidRoundedButtonView {
     }
 }
 #else
-extension SolidRoundedButtonView: @retroactive TGPhotoSolidRoundedButtonView {
+extension SolidRoundedButtonView: TGPhotoSolidRoundedButtonView {
     public func updateWidth(_ width: CGFloat) {
         let _ = self.updateLayout(width: width, transition: .immediate)
     }
