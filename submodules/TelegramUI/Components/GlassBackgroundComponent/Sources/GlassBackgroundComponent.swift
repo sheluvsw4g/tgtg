@@ -422,6 +422,7 @@ public class GlassBackgroundView: UIView {
                 transition.setCornerRadius(layer: self.view.layer, cornerRadius: cornerRadius)
             case let .customRoundedRect(cornerRadii):
                 transition.setCornerRadius(layer: self.view.layer, cornerRadius: 0.0)
+                #if canImport(AlarmKit)
                 if #available(iOS 26.0, *) {
                     transition.animateView {
                         self.view.cornerConfiguration = .corners(
@@ -431,7 +432,9 @@ public class GlassBackgroundView: UIView {
                             bottomRightRadius: .fixed(cornerRadii.bottomRight)
                         )
                     }
-                } else {
+                } else
+                #endif
+                {
                     let maskLayer: CAShapeLayer
                     if let current = self.maskLayer {
                         maskLayer = current
@@ -495,6 +498,7 @@ public class GlassBackgroundView: UIView {
     public static var useCustomGlassImpl: Bool = false
     
     public override init(frame: CGRect) {
+        #if canImport(AlarmKit)
         if #available(iOS 26.0, *), !GlassBackgroundView.useCustomGlassImpl {
             self.legacyView = nil
             self.legacyHighlightContainerView = nil
@@ -513,7 +517,9 @@ public class GlassBackgroundView: UIView {
             
             self.foregroundView = nil
             self.shadowView = nil
-        } else {
+        } else
+        #endif
+        {
             self.legacyView = LegacyGlassView(frame: CGRect())
             let legacyHighlightContainerView = UIView()
             legacyHighlightContainerView.isUserInteractionEnabled = false
@@ -739,6 +745,7 @@ public class GlassBackgroundView: UIView {
                 transition.setAlpha(view: foregroundView, alpha: isVisible ? 1.0 : 0.0)
             } else {
                 if let nativeParamsView = self.nativeParamsView, let nativeView = self.nativeView {
+                    #if canImport(AlarmKit)
                     if #available(iOS 26.0, *) {
                         var glassEffect: UIGlassEffect?
                         
@@ -815,6 +822,7 @@ public class GlassBackgroundView: UIView {
                             nativeParamsView.lumaMax = 0.801
                         }
                     }
+                    #endif
                 }
             }
         }
@@ -855,6 +863,7 @@ public final class GlassBackgroundContainerView: UIView {
     }
     
     public init(spacing: CGFloat = 7.0) {
+        #if canImport(AlarmKit)
         if #available(iOS 26.0, *), !GlassBackgroundView.useCustomGlassImpl {
             let effect = UIGlassContainerEffect()
             effect.spacing = spacing
@@ -866,7 +875,9 @@ public final class GlassBackgroundContainerView: UIView {
             nativeParamsView.addSubview(nativeView)
             
             self.legacyView = nil
-        } else {
+        } else
+        #endif
+        {
             self.nativeView = nil
             self.nativeParamsView = nil
             self.legacyView = ContentView()
@@ -1680,7 +1691,7 @@ public final class GlassContextExtractableContainer: UIView, ContextExtractableC
                 tintColor: normalParams.tintColor,
                 isInteractive: normalParams.isInteractive,
                 isVisible: normalParams.isVisible,
-                transition: mappedTransition,
+                transition: mappedTransition
             )
         case let .extracted(size, cornerRadius, extractionState):
             switch extractionState {

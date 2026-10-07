@@ -1490,9 +1490,11 @@ private final class LensTransitionContainerEffectViewImpl: UIView, LensTransitio
         transition.animateView {
             self.glassView.bounds.size = size
             self.glassView.center = CGPoint(x: size.width * 0.5, y: size.height * 0.5)
+            #if canImport(AlarmKit)
             if #available(iOS 26.0, *) {
                 self.glassView.cornerConfiguration = .corners(radius: UICornerRadius(floatLiteral: cornerRadius))
             }
+            #endif
         }
     }
     
@@ -1586,6 +1588,7 @@ private final class LensTransitionContainerEffectViewImpl: UIView, LensTransitio
     }
     
     func updateCornerRadius(duration: Double, keyframes: [CGFloat]) {
+        #if canImport(AlarmKit)
         guard #available(iOS 26.0, *) else {
             return
         }
@@ -1624,6 +1627,7 @@ private final class LensTransitionContainerEffectViewImpl: UIView, LensTransitio
             },
             completion: nil
         )
+        #endif
     }
     
     func setTransitionFraction(value: CGFloat, duration: Double) {
