@@ -1473,6 +1473,7 @@ private final class LensTransitionContainerEffectViewImpl: UIView, LensTransitio
     
     func update(theme: PresentationTheme) {
         self.theme = theme
+        #if canImport(AlarmKit)
         if #available(iOS 26.0, *) {
             let glassEffectValue: UIGlassEffect
             if theme.overallDarkAppearance {
@@ -1484,6 +1485,7 @@ private final class LensTransitionContainerEffectViewImpl: UIView, LensTransitio
             }
             self.glassView.effect = glassEffectValue
         }
+        #endif
     }
     
     func updateSize(size: CGSize, cornerRadius: CGFloat, transition: ComponentTransition) {
