@@ -205,7 +205,6 @@ public final class SliderComponent: Component {
             
             let size = CGSize(width: availableSize.width, height: 44.0)
             
-            #if canImport(AlarmKit)
             if #available(iOS 26.0, *), component.useNative {
                 if let sliderView = self.sliderView {
                     self.sliderView = nil
@@ -233,7 +232,9 @@ public final class SliderComponent: Component {
                     case let .discrete(discrete):
                         sliderView.minimumValue = 0.0
                         sliderView.maximumValue = Float(discrete.valueCount - 1)
+                        #if canImport(AlarmKit)
                         sliderView.trackConfiguration = .init(numberOfTicks: discrete.valueCount)
+                        #endif
                     }
                 }
                 switch component.content {
@@ -289,7 +290,6 @@ public final class SliderComponent: Component {
                 
                 transition.setFrame(view: sliderView, frame: CGRect(origin: CGPoint(x: 0.0, y: 0.0), size: CGSize(width: availableSize.width, height: 44.0)))
             } else {
-            #endif
                 self.nativeTrackBackgroundView.frame = CGRect()
                 self.nativeTrackForegroundView.frame = CGRect()
                 if let nativeSliderView = self.nativeSliderView {
@@ -416,9 +416,7 @@ public final class SliderComponent: Component {
                 
                 transition.setFrame(view: sliderView, frame: CGRect(origin: CGPoint(x: 0.0, y: 0.0), size: CGSize(width: availableSize.width, height: 44.0)))
                 sliderView.hitTestEdgeInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
-            #if canImport(AlarmKit)
             }
-            #endif
             
             return size
         }
@@ -430,10 +428,8 @@ public final class SliderComponent: Component {
             let floatValue: CGFloat
             if let sliderView = self.sliderView {
                 floatValue = sliderView.value
-            #if canImport(AlarmKit)
             } else if let nativeSliderView = self.nativeSliderView {
                 floatValue = CGFloat(nativeSliderView.value)
-            #endif
             } else {
                 return
             }
