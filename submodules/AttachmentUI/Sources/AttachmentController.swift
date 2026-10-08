@@ -765,53 +765,56 @@ public class AttachmentController: ViewController, MinimizableController {
                 }
             }
             self.panel.invokeAICompose = { [weak self] in
-                Task { @MainActor in
-                    guard let self, let controller = self.controller, let mediaPickerContext = self.mediaPickerContext else {
-                        return
-                    }
-
-                    guard let caption = await mediaPickerContext.caption.get() else {
-                        return
-                    }
-                    if caption.length == 0 {
-                        return
-                    }
-
-                    let textProcessingScreen = await controller.context.sharedContext.makeTextProcessingScreen(
-                        context: controller.context,
-                        theme: self.presentationData.theme,
-                        mode: .edit(
-                            saveRestoreStateId: nil,
-                            completion: { [weak self] text in
-                                guard let self, let mediaPickerContext = self.mediaPickerContext else {
-                                    return
-                                }
-                                // Captions are plain text with entities; the API only returns a rich result for rich input.
-                                guard case let .plain(text, entities) = text else {
-                                    return
-                                }
-                                self.panel.updateCaption(chatInputStateStringWithAppliedEntities(text, entities: entities))
-                                mediaPickerContext.setCaption(chatInputStateStringWithAppliedEntities(text, entities: entities))
-                            },
-                            send: { [weak self] text in
-                                guard let self, let mediaPickerContext = self.mediaPickerContext else {
-                                    return
-                                }
-                                // Captions are plain text with entities; the API only returns a rich result for rich input.
-                                guard case let .plain(text, entities) = text else {
-                                    return
-                                }
-                                mediaPickerContext.setCaption(chatInputStateStringWithAppliedEntities(text, entities: entities))
-                                mediaPickerContext.send(mode: .generic, attachmentMode: .media, parameters: nil)
-                            },
-                            sendContextActions: nil
-                        ),
-                        inputText: .plain(text: caption.string, entities: []),
-                        copyResult: nil,
-                        translateChat: nil
-                    )
-                    self.controller?.push(textProcessingScreen)
+                guard let self, let controller = self.controller, let mediaPickerContext = self.mediaPickerContext else {
+                    return
                 }
+                let _ = (mediaPickerContext.caption
+                |> take(1)
+                |> deliverOnMainQueue).start(next: { [weak self, weak controller] caption in
+                    guard let self, let controller, let caption, caption.length > 0 else {
+                        return
+                    }
+                    let captionString = caption.string
+                    Task { @MainActor [weak self, weak controller] in
+                        guard let self, let controller else {
+                            return
+                        }
+                        let textProcessingScreen = await controller.context.sharedContext.makeTextProcessingScreen(
+                            context: controller.context,
+                            theme: self.presentationData.theme,
+                            mode: .edit(
+                                saveRestoreStateId: nil,
+                                completion: { [weak self] text in
+                                    guard let self, let mediaPickerContext = self.mediaPickerContext else {
+                                        return
+                                    }
+                                    // Captions are plain text with entities; the API only returns a rich result for rich input.
+                                    guard case let .plain(text, entities) = text else {
+                                        return
+                                    }
+                                    self.panel.updateCaption(chatInputStateStringWithAppliedEntities(text, entities: entities))
+                                    mediaPickerContext.setCaption(chatInputStateStringWithAppliedEntities(text, entities: entities))
+                                },
+                                send: { [weak self] text in
+                                    guard let self, let mediaPickerContext = self.mediaPickerContext else {
+                                        return
+                                    }
+                                    // Captions are plain text with entities; the API only returns a rich result for rich input.
+                                    guard case let .plain(text, entities) = text else {
+                                        return
+                                    }
+                                    mediaPickerContext.setCaption(chatInputStateStringWithAppliedEntities(text, entities: entities))
+                                    mediaPickerContext.send(mode: .generic, attachmentMode: .media, parameters: nil)
+                                },
+                                sendContextActions: nil
+                            ),
+                            inputText: .plain(text: captionString, entities: []),
+                            copyResult: nil,
+                            translateChat: nil
+                        )
+                        self.controller?.push(textProcessingScreen)
+                    }
+                })
             }
 
             self.panel.onMainButtonPressed = { [weak self] in
