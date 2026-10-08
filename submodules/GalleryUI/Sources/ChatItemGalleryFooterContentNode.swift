@@ -548,6 +548,7 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
                     
                     let _ = ApplicationSpecificNotice.incrementTranslationSuggestion(accountManager: self.context.sharedContext.accountManager, timestamp: Int32(Date().timeIntervalSince1970)).start()
 
+                    let plainText = text.string
                     Task { @MainActor [weak self] in
                         guard let self else {
                             return
@@ -556,7 +557,7 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
                             context: self.context,
                             theme: defaultDarkPresentationTheme,
                             mode: .translate(fromLanguage: language, applyResult: nil),
-                            inputText: .plain(text: text.string, entities: []),
+                            inputText: .plain(text: plainText, entities: []),
                             copyResult: { [weak self] text in
                                 guard let self else {
                                     return
