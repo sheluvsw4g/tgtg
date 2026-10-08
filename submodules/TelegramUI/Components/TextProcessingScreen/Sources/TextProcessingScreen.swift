@@ -1786,11 +1786,13 @@ private final class TextProcessingSheetComponent: Component {
                                     
                                     if let emojiFile {
                                         self.styleCreatedToastData = (Foundation.Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false, block: { [weak self] _ in
-                                            guard let self else {
-                                                return
+                                            Queue.mainQueue().async {
+                                                guard let self else {
+                                                    return
+                                                }
+                                                self.styleCreatedToastData = nil
+                                                self.state?.updated(transition: .spring(duration: 0.4))
                                             }
-                                            self.styleCreatedToastData = nil
-                                            self.state?.updated(transition: .spring(duration: 0.4))
                                         }), emojiFile, style)
                                     }
                                 }
@@ -1832,11 +1834,13 @@ private final class TextProcessingSheetComponent: Component {
                                 return
                             }
                             self.customToastData = (Foundation.Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false, block: { [weak self] _ in
-                                guard let self else {
-                                    return
+                                Queue.mainQueue().async {
+                                    guard let self else {
+                                        return
+                                    }
+                                    self.customToastData = nil
+                                    self.state?.updated(transition: .spring(duration: 0.4))
                                 }
-                                self.customToastData = nil
-                                self.state?.updated(transition: .spring(duration: 0.4))
                             }), text)
                             self.state?.updated(transition: .spring(duration: 0.4))
                         },
