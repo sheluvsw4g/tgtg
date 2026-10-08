@@ -2374,7 +2374,7 @@ final class MediaEditorScreenComponent: Component {
                         component: AnyComponent(PlainButtonComponent(
                             content: AnyComponent(
                                 SelectionPanelButtonContentComponent(
-                                    count: Int32(controller.node.items.count(where: { $0.isEnabled })),
+                                    count: Int32(controller.node.items.filter({ $0.isEnabled }).count),
                                     isSelected: self.isSelectionPanelOpen,
                                     tag: nil
                                 )
@@ -7108,7 +7108,7 @@ public final class MediaEditorScreenImpl: ViewController, MediaEditorScreen, UID
         
         var storyCount: Int32 = 0
         if self.node.items.count > 0 {
-            storyCount = Int32(self.node.items.count(where: { $0.isEnabled }))
+            storyCount = Int32(self.node.items.filter({ $0.isEnabled }).count)
         } else {
             if case let .asset(asset) = self.node.subject {
                 let duration: Double

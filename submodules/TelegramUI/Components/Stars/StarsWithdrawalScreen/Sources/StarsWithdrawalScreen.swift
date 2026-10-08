@@ -1593,7 +1593,7 @@ private final class AmountFieldStarsFormatter: NSObject, UITextFieldDelegate {
         }) {
             return false
         }
-        if let decimalSeparator = self.dateTimeFormat.decimalSeparator.first, newText.count(where: { $0 == decimalSeparator }) > 1 {
+        if let decimalSeparator = self.dateTimeFormat.decimalSeparator.first, newText.filter({ $0 == decimalSeparator }).count > 1 {
             return false
         }
         
