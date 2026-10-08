@@ -171,13 +171,13 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController 
         guard let tabContainerData = self.tabContainerData else {
             return 0
         }
-        return Int32(tabContainerData.0.count(where: { entry in
+        return Int32(tabContainerData.0.filter({ entry in
             if case .filter = entry {
                 return true
             } else {
                 return false
             }
-        }))
+        }).count)
     }
     
     private var hasDownloads: Bool = false

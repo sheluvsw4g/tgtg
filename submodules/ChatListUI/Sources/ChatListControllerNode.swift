@@ -1588,13 +1588,13 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
                                 }
                                 
                                 if isDisabled {
-                                    let filtersCount = tabContainerData.0.count(where: { item in
+                                    let filtersCount = tabContainerData.0.filter({ item in
                                         if case .all = item {
                                             return false
                                         } else {
                                             return true
                                         }
-                                    })
+                                    }).count
                                     let context = self.context
                                     var replaceImpl: ((ViewController) -> Void)?
                                     let controller = PremiumLimitScreen(context: context, subject: .folders, count: Int32(filtersCount), action: {
