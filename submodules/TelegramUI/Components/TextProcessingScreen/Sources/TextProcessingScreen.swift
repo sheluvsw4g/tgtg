@@ -1786,7 +1786,7 @@ private final class TextProcessingSheetComponent: Component {
                                     
                                     if let emojiFile {
                                         self.styleCreatedToastData = (Foundation.Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false, block: { [weak self] _ in
-                                            Queue.mainQueue().async {
+                                            Task { @MainActor in
                                                 guard let self else {
                                                     return
                                                 }
@@ -1834,7 +1834,7 @@ private final class TextProcessingSheetComponent: Component {
                                 return
                             }
                             self.customToastData = (Foundation.Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false, block: { [weak self] _ in
-                                Queue.mainQueue().async {
+                                Task { @MainActor in
                                     guard let self else {
                                         return
                                     }
