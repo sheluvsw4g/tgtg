@@ -1787,12 +1787,12 @@ private final class TextProcessingSheetComponent: Component {
                                     if let emojiFile {
                                         let target = strongSelf
                                         strongSelf.styleCreatedToastData = (Foundation.Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false, block: { [weak target] _ in
+                                            guard let strongTarget = target else {
+                                                return
+                                            }
                                             Task { @MainActor in
-                                                guard let target else {
-                                                    return
-                                                }
-                                                target.styleCreatedToastData = nil
-                                                target.state?.updated(transition: .spring(duration: 0.4))
+                                                strongTarget.styleCreatedToastData = nil
+                                                strongTarget.state?.updated(transition: .spring(duration: 0.4))
                                             }
                                         }), emojiFile, style)
                                     }
@@ -1836,12 +1836,12 @@ private final class TextProcessingSheetComponent: Component {
                             }
                             let target = strongSelf
                             strongSelf.customToastData = (Foundation.Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false, block: { [weak target] _ in
+                                guard let strongTarget = target else {
+                                    return
+                                }
                                 Task { @MainActor in
-                                    guard let target else {
-                                        return
-                                    }
-                                    target.customToastData = nil
-                                    target.state?.updated(transition: .spring(duration: 0.4))
+                                    strongTarget.customToastData = nil
+                                    strongTarget.state?.updated(transition: .spring(duration: 0.4))
                                 }
                             }), text)
                             strongSelf.state?.updated(transition: .spring(duration: 0.4))
