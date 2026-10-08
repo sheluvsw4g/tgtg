@@ -12,7 +12,7 @@ import UndoUI
 
 private final class ExtendedSettingsArguments {
     let context: AccountContext
-    let updateSettings: ((ExtendedAppSettings) -> ExtendedAppSettings) -> Void
+    let updateSettings: (@escaping (ExtendedAppSettings) -> ExtendedAppSettings) -> Void
     let editFakeNumber: () -> Void
     let editDynamicIslandText: () -> Void
     let editFakeStars: () -> Void
@@ -23,7 +23,7 @@ private final class ExtendedSettingsArguments {
 
     init(
         context: AccountContext,
-        updateSettings: @escaping ((ExtendedAppSettings) -> ExtendedAppSettings) -> Void,
+        updateSettings: @escaping (@escaping (ExtendedAppSettings) -> ExtendedAppSettings) -> Void,
         editFakeNumber: @escaping () -> Void,
         editDynamicIslandText: @escaping () -> Void,
         editFakeStars: @escaping () -> Void,
@@ -203,19 +203,35 @@ private enum ExtendedSettingsEntry: ItemListNodeEntry {
             return ItemListSectionHeaderItem(presentationData: presentationData, text: "РЕЖИМ ПРИЗРАКА", sectionId: self.section)
         case let .ghostMode(value):
             return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: "Не читать входящие", value: value, sectionId: self.section, style: .blocks) { updated in
-                args.updateSettings { $0.ghostModeEnabled = updated; return $0 }
+                args.updateSettings { current in
+                    var current = current
+                    current.ghostModeEnabled = updated
+                    return current
+                }
             }
         case let .hideTyping(value):
             return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: "Скрывать «Печатает...»", value: value, sectionId: self.section, style: .blocks) { updated in
-                args.updateSettings { $0.hideTypingStatus = updated; return $0 }
+                args.updateSettings { current in
+                    var current = current
+                    current.hideTypingStatus = updated
+                    return current
+                }
             }
         case let .storiesLocalRead(value):
             return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: "Скрытый просмотр историй", value: value, sectionId: self.section, style: .blocks) { updated in
-                args.updateSettings { $0.markStoriesReadLocallyOnly = updated; return $0 }
+                args.updateSettings { current in
+                    var current = current
+                    current.markStoriesReadLocallyOnly = updated
+                    return current
+                }
             }
         case let .silentMessages(value):
             return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: "Тихие сообщения по умолчанию", value: value, sectionId: self.section, style: .blocks) { updated in
-                args.updateSettings { $0.sendSilentByDefault = updated; return $0 }
+                args.updateSettings { current in
+                    var current = current
+                    current.sendSilentByDefault = updated
+                    return current
+                }
             }
         case .ghostFooter:
             return ItemListTextItem(presentationData: presentationData, text: .plain("Собеседники не увидят ваш статус прочтения, активность в сети и просмотр историй."), sectionId: self.section)
@@ -225,7 +241,11 @@ private enum ExtendedSettingsEntry: ItemListNodeEntry {
             return ItemListSectionHeaderItem(presentationData: presentationData, text: "ФЕЙКОВЫЙ НОМЕР", sectionId: self.section)
         case let .fakeNumberToggle(value):
             return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: "Фейковый номер", value: value, sectionId: self.section, style: .blocks) { updated in
-                args.updateSettings { $0.fakePhoneEnabled = updated; return $0 }
+                args.updateSettings { current in
+                    var current = current
+                    current.fakePhoneEnabled = updated
+                    return current
+                }
             }
         case let .fakeNumberValue(value):
             return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "Номер \(value)", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks) {
@@ -243,7 +263,11 @@ private enum ExtendedSettingsEntry: ItemListNodeEntry {
             }
         case let .showDeletedGiftsToggle(value):
             return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: "Отображать удалённые подарки", value: value, sectionId: self.section, style: .blocks) { updated in
-                args.updateSettings { $0.showDeletedGifts = updated; return $0 }
+                args.updateSettings { current in
+                    var current = current
+                    current.showDeletedGifts = updated
+                    return current
+                }
             }
         case let .fakeBonusStarsValue(value):
             return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "Фейковый бонус звёзд: +\(value) ⭐", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks) {
@@ -265,7 +289,11 @@ private enum ExtendedSettingsEntry: ItemListNodeEntry {
             return ItemListSectionHeaderItem(presentationData: presentationData, text: "ОФОРМЛЕНИЕ ВЫРЕЗА (DYNAMIC ISLAND / NOTCH)", sectionId: self.section)
         case let .dynamicIslandToggle(value):
             return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: "Оверлей Dynamic Island", value: value, sectionId: self.section, style: .blocks) { updated in
-                args.updateSettings { $0.dynamicIslandEnabled = updated; return $0 }
+                args.updateSettings { current in
+                    var current = current
+                    current.dynamicIslandEnabled = updated
+                    return current
+                }
             }
         case let .dynamicIslandTextValue(value):
             return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "Текст островка: \(value)", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks) {
@@ -279,7 +307,11 @@ private enum ExtendedSettingsEntry: ItemListNodeEntry {
             return ItemListSectionHeaderItem(presentationData: presentationData, text: "ВИЗУАЛЬНЫЕ ДАННЫЕ ПРОФИЛЯ", sectionId: self.section)
         case let .fakePremiumToggle(value):
             return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: "Локальный Premium статус", value: value, sectionId: self.section, style: .blocks) { updated in
-                args.updateSettings { $0.fakePremiumBadge = updated; return $0 }
+                args.updateSettings { current in
+                    var current = current
+                    current.fakePremiumBadge = updated
+                    return current
+                }
             }
         case let .fakeBalanceValue(value):
             return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "Баланс кошелька: \(value)", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks) {}
@@ -291,20 +323,36 @@ private enum ExtendedSettingsEntry: ItemListNodeEntry {
             return ItemListSectionHeaderItem(presentationData: presentationData, text: "МЕДИА И ЗАЩИТА", sectionId: self.section)
         case let .bypassContentProtectionToggle(value):
             return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: "Обход защиты контента", value: value, sectionId: self.section, style: .blocks) { updated in
-                args.updateSettings { $0.bypassContentProtection = updated; return $0 }
+                args.updateSettings { current in
+                    var current = current
+                    current.bypassContentProtection = updated
+                    return current
+                }
             }
         case let .antiDeleteToggle(value):
             return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: "Анти-удаление сообщений", value: value, sectionId: self.section, style: .blocks) { updated in
                 UserDefaults.standard.set(updated, forKey: "custom_anti_delete_enabled")
-                args.updateSettings { $0.antiDeleteEnabled = updated; return $0 }
+                args.updateSettings { current in
+                    var current = current
+                    current.antiDeleteEnabled = updated
+                    return current
+                }
             }
         case let .antiEditToggle(value):
             return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: "История правок сообщений", value: value, sectionId: self.section, style: .blocks) { updated in
-                args.updateSettings { $0.antiEditEnabled = updated; return $0 }
+                args.updateSettings { current in
+                    var current = current
+                    current.antiEditEnabled = updated
+                    return current
+                }
             }
         case let .voiceChangerToggle(value):
             return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: "Модулятор голоса (Pitch Shift)", value: value, sectionId: self.section, style: .blocks) { updated in
-                args.updateSettings { $0.voiceChangerEnabled = updated; return $0 }
+                args.updateSettings { current in
+                    var current = current
+                    current.voiceChangerEnabled = updated
+                    return current
+                }
             }
         case .mediaBypassFooter:
             return ItemListTextItem(presentationData: presentationData, text: .plain("Удалённые собеседником сообщения остаются в чате. Снимается запрет на скриншоты и скачивание."), sectionId: self.section)
@@ -314,19 +362,35 @@ private enum ExtendedSettingsEntry: ItemListNodeEntry {
             return ItemListSectionHeaderItem(presentationData: presentationData, text: "ИНТЕРФЕЙС И ЭФФЕКТЫ", sectionId: self.section)
         case let .liquidGlassToggle(value):
             return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: "Liquid Glass (Размытие)", value: value, sectionId: self.section, style: .blocks) { updated in
-                args.updateSettings { $0.liquidGlassEffects = updated; return $0 }
+                args.updateSettings { current in
+                    var current = current
+                    current.liquidGlassEffects = updated
+                    return current
+                }
             }
         case let .snowEffectToggle(value):
             return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: "Падающий снег", value: value, sectionId: self.section, style: .blocks) { updated in
-                args.updateSettings { $0.fallingSnowEffect = updated; return $0 }
+                args.updateSettings { current in
+                    var current = current
+                    current.fallingSnowEffect = updated
+                    return current
+                }
             }
         case let .blockAdsToggle(value):
             return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: "Блокировка Telegram Ads", value: value, sectionId: self.section, style: .blocks) { updated in
-                args.updateSettings { $0.blockChannelSponsoredAds = updated; return $0 }
+                args.updateSettings { current in
+                    var current = current
+                    current.blockChannelSponsoredAds = updated
+                    return current
+                }
             }
         case let .stickyAvatarToggle(value):
             return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: "Липкая анимация аватарки", value: value, sectionId: self.section, style: .blocks) { updated in
-                args.updateSettings { $0.stickyAvatarScroll = updated; return $0 }
+                args.updateSettings { current in
+                    var current = current
+                    current.stickyAvatarScroll = updated
+                    return current
+                }
             }
         case .visualFXFooter:
             return ItemListTextItem(presentationData: presentationData, text: .plain("Кастомизация визуального стиля, полупрозрачности панелей и отключение рекламы."), sectionId: self.section)
@@ -336,15 +400,27 @@ private enum ExtendedSettingsEntry: ItemListNodeEntry {
             return ItemListSectionHeaderItem(presentationData: presentationData, text: "СИСТЕМНЫЕ ОПЦИИ", sectionId: self.section)
         case let .exactViewsToggle(value):
             return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: "Точные просмотры постов", value: value, sectionId: self.section, style: .blocks) { updated in
-                args.updateSettings { $0.exactViewsCount = updated; return $0 }
+                args.updateSettings { current in
+                    var current = current
+                    current.exactViewsCount = updated
+                    return current
+                }
             }
         case let .secondsInTimeToggle(value):
             return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: "Показывать секунды во времени", value: value, sectionId: self.section, style: .blocks) { updated in
-                args.updateSettings { $0.showSecondsInTime = updated; return $0 }
+                args.updateSettings { current in
+                    var current = current
+                    current.showSecondsInTime = updated
+                    return current
+                }
             }
         case let .stripZalgoToggle(value):
             return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: "Фильтр Zalgo символов", value: value, sectionId: self.section, style: .blocks) { updated in
-                args.updateSettings { $0.stripZalgoCharacters = updated; return $0 }
+                args.updateSettings { current in
+                    var current = current
+                    current.stripZalgoCharacters = updated
+                    return current
+                }
             }
         case .restartAppAction:
             return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "Быстрый перезапуск приложения", kind: .destructive, alignment: .natural, sectionId: self.section, style: .blocks) {
@@ -436,7 +512,7 @@ public func makeExtendedSettingsController(context: AccountContext) -> ViewContr
 
     let arguments = ExtendedSettingsArguments(
         context: context,
-        updateSettings: { update in
+        updateSettings: { (update: @escaping (ExtendedAppSettings) -> ExtendedAppSettings) in
             let _ = updateExtendedAppSettingsInteractively(accountManager: context.sharedContext.accountManager, update).startStandalone()
         },
         editFakeNumber: {
@@ -454,7 +530,7 @@ public func makeExtendedSettingsController(context: AccountContext) -> ViewContr
                     return updated
                 }).startStandalone()
             }))
-            context.sharedContext.mainWindow?.topViewController?.present(alert, animated: true)
+            context.sharedContext.mainWindow?.presentNative(alert)
         },
         editDynamicIslandText: {
             let alert = UIAlertController(title: "Dynamic Island", message: "Введите надпись для островка", preferredStyle: .alert)
@@ -471,7 +547,7 @@ public func makeExtendedSettingsController(context: AccountContext) -> ViewContr
                     return updated
                 }).startStandalone()
             }))
-            context.sharedContext.mainWindow?.topViewController?.present(alert, animated: true)
+            context.sharedContext.mainWindow?.presentNative(alert)
         },
         editFakeStars: {
             let alert = UIAlertController(title: "Фейковые звёзды", message: "Укажите количество бонусных звёзд (будут прибавлены к вашему реальному балансу)", preferredStyle: .alert)
@@ -486,17 +562,16 @@ public func makeExtendedSettingsController(context: AccountContext) -> ViewContr
                     updateStateImpl?()
                 }
             }))
-            context.sharedContext.mainWindow?.topViewController?.present(alert, animated: true)
+            context.sharedContext.mainWindow?.presentNative(alert)
         },
         updateMockNftPurchases: { enabled in
             StarsMockManager.shared.mockNftPurchasesEnabled = enabled
         },
         resetSpentStars: {
             StarsMockManager.shared.resetSpentStars()
-            let presentationData = context.sharedContext.currentPresentationData.with { $0 }
             let alert = UIAlertController(title: "Баланс восстановлен", message: "Потраченные фейковые звёзды сброшены.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default))
-            context.sharedContext.mainWindow?.topViewController?.present(alert, animated: true)
+            context.sharedContext.mainWindow?.presentNative(alert)
             updateStateImpl?()
         },
         openFakeGifts: {
@@ -505,39 +580,38 @@ public func makeExtendedSettingsController(context: AccountContext) -> ViewContr
                 FakeGiftsManager.shared.addGift(title: "Plush Pepe", num: 1337, recipientPeerId: 0)
                 let confirm = UIAlertController(title: "Успешно!", message: "Plush Pepe #1337 добавлен в ваш профиль.", preferredStyle: .alert)
                 confirm.addAction(UIAlertAction(title: "Отлично", style: .default))
-                context.sharedContext.mainWindow?.topViewController?.present(confirm, animated: true)
+                context.sharedContext.mainWindow?.presentNative(confirm)
             }))
             sheet.addAction(UIAlertAction(title: "🧢 Durov's Cap (#777)", style: .default, handler: { _ in
                 FakeGiftsManager.shared.addGift(title: "Durov's Cap", num: 777, recipientPeerId: 0)
                 let confirm = UIAlertController(title: "Успешно!", message: "Durov's Cap #777 добавлен в ваш профиль.", preferredStyle: .alert)
                 confirm.addAction(UIAlertAction(title: "Отлично", style: .default))
-                context.sharedContext.mainWindow?.topViewController?.present(confirm, animated: true)
+                context.sharedContext.mainWindow?.presentNative(confirm)
             }))
             sheet.addAction(UIAlertAction(title: "💎 Heart of Gold (#1)", style: .default, handler: { _ in
                 FakeGiftsManager.shared.addGift(title: "Heart of Gold", num: 1, recipientPeerId: 0)
                 let confirm = UIAlertController(title: "Успешно!", message: "Heart of Gold #1 добавлен в ваш профиль.", preferredStyle: .alert)
                 confirm.addAction(UIAlertAction(title: "Отлично", style: .default))
-                context.sharedContext.mainWindow?.topViewController?.present(confirm, animated: true)
+                context.sharedContext.mainWindow?.presentNative(confirm)
             }))
             sheet.addAction(UIAlertAction(title: "Отмена", style: .cancel))
-            context.sharedContext.mainWindow?.topViewController?.present(sheet, animated: true)
+            context.sharedContext.mainWindow?.presentNative(sheet)
         },
         restartApp: {
             exit(0)
         }
     )
 
-    let updatePromise = ValuePromise<Void>(Void(), ignoreRepeated: false)
+    let updatePromise = ValuePromise<Bool>(true, ignoreRepeated: false)
     updateStateImpl = {
-        updatePromise.set(Void())
+        updatePromise.set(true)
     }
 
-    let signal = combineLatest(
+    let signal: Signal<(ItemListControllerState, (ItemListNodeState, Any)), NoError> = combineLatest(queue: .mainQueue(),
         context.sharedContext.presentationData,
         settingsPromise.get(),
         updatePromise.get()
     )
-    |> deliverOnMainQueue
     |> map { presentationData, settings, _ -> (ItemListControllerState, (ItemListNodeState, Any)) in
         let entries = extendedSettingsEntries(settings: settings)
         let controllerState = ItemListControllerState(
@@ -551,7 +625,8 @@ public func makeExtendedSettingsController(context: AccountContext) -> ViewContr
         let listState = ItemListNodeState(
             presentationData: ItemListPresentationData(presentationData),
             entries: entries,
-            style: .blocks
+            style: .blocks,
+            animateChanges: true
         )
         return (controllerState, (listState, arguments))
     }

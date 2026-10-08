@@ -1306,13 +1306,14 @@ public func privacyAndSecurityController(
             pushControllerImpl?(controller, true)
         })
     }, openPasskeys: {
-        Task { @MainActor in
-            let initialPasskeysData = await (passkeysDataValue.get() |> take(1)).get()
+        let _ = (passkeysDataValue.get()
+        |> take(1)
+        |> deliverOnMainQueue).startStandalone(next: { initialPasskeysData in
             let passkeysScreen = PasskeysScreen(context: context, displaySkip: false, initialPasskeysData: initialPasskeysData, passkeysDataUpdated: { passkeysData in
                 passkeysDataValue.set(.single(passkeysData))
             }, completion: {}, cancel: {})
             pushControllerImpl?(passkeysScreen, true)
-        }
+        })
     }, openActiveSessions: {
         pushControllerImpl?(recentSessionsController(context: context, activeSessionsContext: activeSessionsContext, webSessionsContext: webSessionsContext, websitesOnly: true), true)
     }, toggleArchiveAndMuteNonContacts: { archiveValue in
