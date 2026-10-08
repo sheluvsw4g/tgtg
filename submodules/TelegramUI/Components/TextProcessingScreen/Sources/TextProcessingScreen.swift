@@ -1770,8 +1770,8 @@ private final class TextProcessingSheetComponent: Component {
                             self.state?.updated(transition: .immediate)
                         },
                         newStyleAdded: { [weak self] style in
-                            Task { @MainActor in
-                                guard let self, let component = self.component else {
+                            Task { @MainActor [weak self] in
+                                guard let strongSelf = self, let component = strongSelf.component else {
                                     return
                                 }
                                 var authorPeer: EnginePeer?
@@ -1785,28 +1785,29 @@ private final class TextProcessingSheetComponent: Component {
                                     let emojiFile = await component.context.engine.stickers.resolveInlineStickersLocal(fileIds: [emojiFileId]).get().first?.value
                                     
                                     if let emojiFile {
-                                        self.styleCreatedToastData = (Foundation.Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false, block: { [weak self] _ in
+                                        let target = strongSelf
+                                        strongSelf.styleCreatedToastData = (Foundation.Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false, block: { [weak target] _ in
                                             Task { @MainActor in
-                                                guard let self else {
+                                                guard let target else {
                                                     return
                                                 }
-                                                self.styleCreatedToastData = nil
-                                                self.state?.updated(transition: .spring(duration: 0.4))
+                                                target.styleCreatedToastData = nil
+                                                target.state?.updated(transition: .spring(duration: 0.4))
                                             }
                                         }), emojiFile, style)
                                     }
                                 }
                                 
-                                self.styles.insert(TextProcessingScreen.Style(cloudStyle: style, authorPeer: authorPeer), at: 0)
-                                self.state?.updated(transition: .spring(duration: 0.4))
+                                strongSelf.styles.insert(TextProcessingScreen.Style(cloudStyle: style, authorPeer: authorPeer), at: 0)
+                                strongSelf.state?.updated(transition: .spring(duration: 0.4))
                             }
                         },
                         styleUpdated: { [weak self] style in
-                            Task { @MainActor in
-                                guard let self, let component = self.component else {
+                            Task { @MainActor [weak self] in
+                                guard let strongSelf = self, let component = strongSelf.component else {
                                     return
                                 }
-                                guard let index = self.styles.firstIndex(where: { $0.id.id == style.id }) else {
+                                guard let index = strongSelf.styles.firstIndex(where: { $0.id.id == style.id }) else {
                                     return
                                 }
                                 var authorPeer: EnginePeer?
@@ -1815,8 +1816,8 @@ private final class TextProcessingSheetComponent: Component {
                                         TelegramEngine.EngineData.Item.Peer.Peer(id: authorId)
                                     ).get()
                                 }
-                                self.styles[index] = TextProcessingScreen.Style(cloudStyle: style, authorPeer: authorPeer)
-                                self.state?.updated(transition: .immediate)
+                                strongSelf.styles[index] = TextProcessingScreen.Style(cloudStyle: style, authorPeer: authorPeer)
+                                strongSelf.state?.updated(transition: .immediate)
                             }
                         },
                         styleDeleted: { [weak self] id in
@@ -1830,19 +1831,20 @@ private final class TextProcessingSheetComponent: Component {
                             self.state?.updated(transition: .spring(duration: 0.4))
                         },
                         displayToast: { [weak self] text in
-                            guard let self else {
+                            guard let strongSelf = self else {
                                 return
                             }
-                            self.customToastData = (Foundation.Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false, block: { [weak self] _ in
+                            let target = strongSelf
+                            strongSelf.customToastData = (Foundation.Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false, block: { [weak target] _ in
                                 Task { @MainActor in
-                                    guard let self else {
+                                    guard let target else {
                                         return
                                     }
-                                    self.customToastData = nil
-                                    self.state?.updated(transition: .spring(duration: 0.4))
+                                    target.customToastData = nil
+                                    target.state?.updated(transition: .spring(duration: 0.4))
                                 }
                             }), text)
-                            self.state?.updated(transition: .spring(duration: 0.4))
+                            strongSelf.state?.updated(transition: .spring(duration: 0.4))
                         },
                         dismiss: { [weak self] completion in
                             self?.animateOut.invoke(Action { _ in
