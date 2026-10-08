@@ -4105,11 +4105,13 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                 self.currentLiveStreamStarsIsActive = true
                 self.currentLiveStreamStarsIsActiveTimer?.invalidate()
                 self.currentLiveStreamStarsIsActiveTimer = Foundation.Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false, block: { [weak self, weak view] _ in
-                    guard let self, let view else {
+                    guard let strongSelf = self, let strongView = view else {
                         return
                     }
-                    self.currentLiveStreamStarsIsActive = false
-                    view.state?.updated(transition: .spring(duration: 0.4))
+                    Task { @MainActor in
+                        strongSelf.currentLiveStreamStarsIsActive = false
+                        strongView.state?.updated(transition: .spring(duration: 0.4))
+                    }
                 })
 
                 var totalStars = 0
